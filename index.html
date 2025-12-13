@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Computational Chemistry Helper</title>
+  <script
+src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js">
+</script>
+  <script src="https://3dmol.csb.pitt.edu/build/3Dmol-min.js"></script>
+  <style>
+    body { font-family: serif; margin: 2rem; background: #fafafa; }
+    h1, h2 { margin-top: 2rem; }
+    .card { background: white; padding: 1.5rem; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.08); margin-bottom: 2rem; }
+    input { margin: 0.25rem; }
+    button { margin-top: 0.5rem; padding: 0.4rem 0.8rem; }
+    .correct { color: green; }
+    .wrong { color: crimson; }
+    .viewer { width: 60%;
+  height: 400px;
+  position: relative; }
+    .small-img{ width:50px; height:50px; }
+    #plot-container {
+    width: 80%;
+    height: 400px;
+    margin: auto;
+}
+  </style>
+</head>
+<body>
+
+<h1>Computational Chemistry – Practice Page</h1>
+
+<!-- 1. Random Image -->
+<div class="card">
+  <h2>1. Random Molecular Structure</h2>
+  <img id="randomImage" width="300" />
+</div>
+
+<!-- 2. Z-Matrix Exercises -->
+<div class="card">
+  <h2>2. Z-Matrix Fill-in-the-Blanks</h2>
+  <div id="viewer_h2o" class="viewer" ></div>
+
+  <p><strong>Example 1 (Water)</strong></p>
+  O<br>
+  H 1 <input id="z1" size="4"> <br>
+  H 1 <input id="z2" size="4"> 2 <input id="z3" size="4">
+  <br>
+  <button onclick="checkZ1()">Check</button>
+  <span id="z1result"></span>
+
+  <hr>
+
+  <p><strong>Example 3 (CO2)</strong></p>
+  <div id="viewer_co2" class="viewer" ></div>
+  O<br>
+  C 1 <input id="z10" size="4"><br>
+  O 2 <input id="z11" size="4"> 1 <input id="z12" size="4">
+  <br>
+  <button onclick="checkZ3()">Check</button>
+  <span id="z3result"></span>
+
+
+    <p><strong>Example 4 CHOCH3</strong></p>
+  <div id="viewer_5" class="viewer" ></div>
+  O<br>
+  C 1 <input id="z13" size="4"><br>
+  H 2 <input id="z14" size="4"> 1 <input id="z15" size="4"><br>
+  C 2 <input id="z16" size="4"> 1 <input id="z17" size="4" > 3 <input id="z18" size="4"> <br>
+  H 4 <input id="z19" size="4"> 2 <input id="z20" size="4"> 1 <input id="z21" size="4"> <br>
+  H 4 <input id="z22" size="4"> 2 <input id="z23" size="4"> 1 <input id="z24" size="4"> <br>
+  H 4 <input id="z25" size="4"> 2 <input id="z26" size="4"> 1 <input id="z27" size="4"><br>
+  <button onclick="checkZ4()">Check</button>
+  <span id="z4result"></span>
+</div>
+
+<!-- 3. Plot -->
+<div class="card">
+  <h2>3. Plot Energy vs Coordinate</h2>
+  <p>molecular energies</p>
+  <table>
+        <tr>
+            <th>Molecule (X)</th>
+            <th>Excitation Energy</th>
+        </tr>
+        <tr>
+            <td>1</td>
+            <td><input type="text" id="m1e" placeholder="Energy Value"></td>
+
+        </tr>
+        <tr>
+            <td>2</td>
+            <td><input type="text" id="m2e" placeholder="Energy Value"></td>
+        </tr>
+        <tr>
+            <td>3</td>
+            <td><input type="text" id="m3e" placeholder="Energy Value"></td>
+        </tr>
+        <tr>
+            <td>4</td>
+            <td><input type="text" id="m4e" placeholder="Energy Value"></td>
+        </tr>
+    </table>
+<img id="img1" width="150px" height="150px" src="img1.png" hidden>
+<img id="img2" width="150px" height="150px"  src="img2.png" hidden>
+<img id="img3" width="150px" height="150px"  src="img3.png" hidden>
+<img id="img4" width="150px" height="150px"  src="img4.png" hidden>
+  <button onclick="plotGraph()">Plot</button>
+     <div id="plot-container">
+        <canvas id="myChart"></canvas>
+    </div>
+</div>
+
+
+
+<script>
+  /* 1. Random image */
+  const images = [
+    'img1.png', 'img2.png', 'img3.png', 'img4.png'
+  ];
+  document.getElementById('randomImage').src = images[Math.floor(Math.random()*images.length)];
+
+  /* 2. Z-matrix checks */
+  function checkZ1() {
+    const ok = z1.value==1.0 && z2.value==1.0 && z3.value==104.5;
+    z1result.innerHTML = ok ? '<span class="correct">Correct</span>' : '<span class="wrong">Try again</span>';
+  }
+
+  function checkZ2() {
+    const ok = z4.value==1.0 && z5.value==1.0 && z6.value==109.5 && z7.value==1.0 && z8.value==109.5 && z9.value==120;
+    z2result.innerHTML = ok ? '<span class="correct">Correct</span>' : '<span class="wrong">Try again</span>';
+  }
+
+  function checkZ3() {
+    const ok = z10.value==1.16 && z11.value==1.16 && z12.value==180;
+    z3result.innerHTML = ok ? '<span class="correct">Correct</span>' : '<span class="wrong">Try again</span>';
+  }
+
+
+</script>
+
+<script>
+  const viewerH2O = $3Dmol.createViewer('viewer_h2o', { backgroundColor: 'aqua' });
+  const viewerCO2 = $3Dmol.createViewer('viewer_co2', { backgroundColor: 'green' });
+  const viewer5 = $3Dmol.createViewer('viewer_5', { backgroundColor: 'yellow' });
+
+  // -------- H2O --------
+  function drawH2O() {
+    const viewer = viewerH2O;
+    viewer.clear();
+
+    const r = 0.96;
+    const theta = 104.5*Math.PI/180;
+    const atoms = [
+      {el:'O',x:0,y:0,z:0},
+      {el:'H',x:r,y:0,z:0},
+      {el:'H',x:r*Math.cos(theta),y:r*Math.sin(theta),z:0}
+    ];
+
+    let xyz = atoms.length + '\nH2O\n';
+    atoms.forEach(a=>xyz+=`${a.el} ${a.x.toFixed(4)} ${a.y.toFixed(4)} ${a.z.toFixed(4)}\n`);
+    viewer.addModel(xyz,'xyz');
+    viewer.setStyle({}, {stick:{}, sphere:{scale:0.3}});
+    atoms.forEach((a,i)=>viewer.addLabel(`${i+1}`,{position:a,fontSize:12}));
+
+    viewer.zoomTo(); viewer.render();
+  }
+
+  // -------- CO2 --------
+  function drawCO2() {
+    const viewer = viewerCO2;
+    viewer.clear();
+
+    const r = 1.16;
+    const atoms = [
+      {el:'O',x:-r,y:0,z:0},
+      {el:'C',x:0,y:0,z:0},
+      {el:'O',x:r,y:0,z:0}
+    ];
+
+    let xyz = atoms.length + '\nCO2\n';
+    atoms.forEach(a=>xyz+=`${a.el} ${a.x.toFixed(4)} ${a.y.toFixed(4)} ${a.z.toFixed(4)}\n`);
+    viewer.addModel(xyz,'xyz');
+    viewer.setStyle({}, {stick:{}, sphere:{scale:0.3}});
+    atoms.forEach((a,i)=>viewer.addLabel(`${i+1}`,{position:a,fontSize:12}));
+    viewer.zoomTo(); viewer.render();
+  }
+
+  // -------- NH3 --------
+  function draw5() {
+    const viewer = viewer5;
+    viewer.clear();
+
+    const atoms = [
+      {el:'O',x:-0.43395392,y: 1.31734526,z:-0.16174808},
+        {el:'C',x:-1.05050508,y:0.23232323,z:0.00000000},
+        {el:'H',x:-2.11155547,y:0.23746668,z:0.13800581},
+        {el:'C',x:-0.28314791,y:-1.10287824,z:0.00000000},
+        {el:'H',x:-0.98007550,y:-1.91478460,z:0.00000013},
+        {el:'H',x:0.33189762,y:-1.16077706,z:-0.87365137},
+        {el:'H',x:0.33189770,y:-1.16077760,z:0.87365128}
+    ];
+
+
+    let xyz = atoms.length + '\nCHOCH3\n';
+    atoms.forEach(a=>xyz+=`${a.el} ${a.x.toFixed(4)} ${a.y.toFixed(4)} ${a.z.toFixed(4)}\n`);
+    viewer.addModel(xyz,'xyz');
+    viewer.setStyle({}, {stick:{}, sphere:{scale:0.3}});
+    atoms.forEach((a,i)=>viewer.addLabel(`${i+1}`,{position:a,fontSize:12}));
+    viewer.zoomTo(); viewer.render();
+  }
+
+  drawH2O();
+  drawCO2();
+  draw5();
+</script>
+
+
+<script>
+
+let chart;
+
+function plotGraph() {
+
+    const energy = [
+        parseFloat(document.getElementById("m1e").value),
+        parseFloat(document.getElementById("m2e").value),
+        parseFloat(document.getElementById("m3e").value),
+        parseFloat(document.getElementById("m4e").value),
+    ];
+
+    const images = [
+        document.getElementById("img1"),
+        document.getElementById("img2"),
+        document.getElementById("img3"),
+        document.getElementById("img4"),
+    ];
+
+    const xyValues = [
+        { x: 1, y: energy[0] },
+        { x: 2, y: energy[1] },
+        { x: 3, y: energy[2] },
+        { x: 4, y: energy[3] },
+    ];
+
+    chart = new Chart("myChart", {
+        type: "scatter",
+        data: {
+            datasets: [{
+                data: xyValues,
+                pointStyle: images,
+                pointRadius: 15,
+                showLine: false
+            }]
+        },
+        options: {
+    responsive: true,
+    maintainAspectRatio: false,
+
+    plugins: {
+        legend: { display: true },
+
+        title: {
+            display: true,
+            text: "Energy Profile",
+            font: {
+                size: 18,
+                weight: "bold"
+            }
+        }
+    },
+
+    scales: {
+        x: {
+            type: "linear",
+            min: 0,
+            max: 5,
+            ticks: {
+                stepSize: 1,
+                callback: (value) => [1, 2, 3, 4].includes(value) ? value : ""
+            },
+            title: {
+                display: true,
+                text: "Excitation energies of Molecules",
+                font: {
+                    size: 14
+                }
+            }
+        },
+
+        y: {
+            title: {
+                display: true,
+                text: "Energy (kJ mol⁻¹)",
+                font: {
+                    size: 14
+                }
+            }
+        }
+    }
+}
+
+    });
+}
+
+
+</script>
+
+</body>
+</html>
