@@ -39,9 +39,38 @@ src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js">
 <!-- 2. Z-Matrix Exercises -->
 <div class="card">
   <h2>2. Z-Matrix Fill-in-the-Blanks</h2>
+
+
+
+  <p><strong>Example  (atom)</strong></p>
+    <div id="viewer_O" class="viewer" ></div>
+    <hr>
+    <p> z matix</p>
+  <input id="z0" size="3"><br>
+
+  <br>
+  <button onclick="checkZ0()">Check</button>
+  <span id="zOresult"></span>
+
+  <hr>
+
+
+    <p><strong>Example H2</strong></p>
+    <div id="viewer_H2" class="viewer" ></div>
+    <hr>
+    <p> z matix</p>
+  <input id="zh1" size="3"><br>
+    <input id="zh2" size="3"> <input id="zh3" size="4"><br>
+
+  <br>
+  <button onclick="checkZh()">Check</button>
+  <span id="zhresult"></span>
+
+  <hr>
+
   <div id="viewer_h2o" class="viewer" ></div>
 
-  <p><strong>Example 1 (Water)</strong></p>
+  <p><strong>Example (Water)</strong></p>
   O<br>
   H 1 <input id="z1" size="4"> <br>
   H 1 <input id="z2" size="4"> 2 <input id="z3" size="4">
@@ -51,7 +80,7 @@ src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js">
 
   <hr>
 
-  <p><strong>Example 3 (CO2)</strong></p>
+  <p><strong>Example (CO2)</strong></p>
   <div id="viewer_co2" class="viewer" ></div>
   O<br>
   C 1 <input id="z10" size="4"><br>
@@ -61,15 +90,15 @@ src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js">
   <span id="z3result"></span>
 
 
-    <p><strong>Example 4 CHOCH3</strong></p>
+    <p><strong>Example CHOCH3</strong></p>
   <div id="viewer_5" class="viewer" ></div>
   O<br>
   C 1 <input id="z13" size="4"><br>
   H 2 <input id="z14" size="4"> 1 <input id="z15" size="4"><br>
   C 2 <input id="z16" size="4"> 1 <input id="z17" size="4" > 3 <input id="z18" size="4"> <br>
   H 4 <input id="z19" size="4"> 2 <input id="z20" size="4"> 1 <input id="z21" size="4"> <br>
-  H 4 <input id="z22" size="4"> 2 <input id="z23" size="4"> 1 <input id="z24" size="4"> <br>
-  H 4 <input id="z25" size="4"> 2 <input id="z26" size="4"> 1 <input id="z27" size="4"><br>
+  H <input size="1"> <input id="z22" size="4"> <input size="1"> <input id="z23" size="4"> <input size="1"> <input id="z24" size="4"> <br>
+  H <input size="1"> <input id="z25" size="4"> <input size="1"> <input id="z26" size="4"> <input size="1"> <input id="z27" size="4"><br>
   <button onclick="checkZ4()">Check</button>
   <span id="z4result"></span>
 </div>
@@ -120,16 +149,23 @@ src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js">
   ];
   document.getElementById('randomImage').src = images[Math.floor(Math.random()*images.length)];
 
+  function checkZ0() {
+    const ok = z0.value==1.0;
+    zOresult.innerHTML = ok ? '<span class="correct">Correct</span>' : '<span class="wrong">Try again</span>';
+  }
+
+
+  function checkZh() {
+    const ok = zh1.value=='H' && zh2.value=="H" && z3.value=="0.8";
+    zhresult.innerHTML = ok ? '<span class="correct">Correct</span>' : '<span class="wrong">Try again</span>';
+  }
+
   /* 2. Z-matrix checks */
   function checkZ1() {
     const ok = z1.value==1.0 && z2.value==1.0 && z3.value==104.5;
     z1result.innerHTML = ok ? '<span class="correct">Correct</span>' : '<span class="wrong">Try again</span>';
   }
 
-  function checkZ2() {
-    const ok = z4.value==1.0 && z5.value==1.0 && z6.value==109.5 && z7.value==1.0 && z8.value==109.5 && z9.value==120;
-    z2result.innerHTML = ok ? '<span class="correct">Correct</span>' : '<span class="wrong">Try again</span>';
-  }
 
   function checkZ3() {
     const ok = z10.value==1.16 && z11.value==1.16 && z12.value==180;
@@ -140,9 +176,49 @@ src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js">
 </script>
 
 <script>
-  const viewerH2O = $3Dmol.createViewer('viewer_h2o', { backgroundColor: 'aqua' });
-  const viewerCO2 = $3Dmol.createViewer('viewer_co2', { backgroundColor: 'green' });
-  const viewer5 = $3Dmol.createViewer('viewer_5', { backgroundColor: 'yellow' });
+    const viewerO = $3Dmol.createViewer('viewer_O', { backgroundColor: 'grey' });
+    const viewerZh = $3Dmol.createViewer('viewer_H2', { backgroundColor: 'black' });
+    const viewerH2O = $3Dmol.createViewer('viewer_h2o', { backgroundColor: 'aqua' });
+    const viewerCO2 = $3Dmol.createViewer('viewer_co2', { backgroundColor: 'green' });
+    const viewer5 = $3Dmol.createViewer('viewer_5', { backgroundColor: 'yellow' });
+
+  function drawO() {
+    const viewer = viewerO;
+    viewer.clear();
+
+    const atoms = [
+      {el:'O',x:0,y:0,z:0},
+    ];
+
+    let xyz = atoms.length + '\nO\n';
+    atoms.forEach(a=>xyz+=`${a.el} ${a.x.toFixed(4)} ${a.y.toFixed(4)} ${a.z.toFixed(4)}\n`);
+    viewer.addModel(xyz,'xyz');
+    viewer.setStyle({}, {stick:{}, sphere:{scale:0.3}});
+    atoms.forEach((a,i)=>viewer.addLabel(`${i+1}`,{position:a,fontSize:12}));
+
+    viewer.zoomTo(); viewer.render();
+  }
+
+  function drawZh() {
+    const viewer = viewerZh;
+    viewer.clear();
+
+    const atoms = [
+      {el:'H',x:0,y:0,z:0},
+        {el:'H',x:0.8,y:0,z:0}
+    ];
+
+    let xyz = atoms.length + '\nH2\n';
+    atoms.forEach(a=>xyz+=`${a.el} ${a.x.toFixed(4)} ${a.y.toFixed(4)} ${a.z.toFixed(4)}\n`);
+    viewer.addModel(xyz,'xyz');
+    viewer.setStyle({}, {stick:{}, sphere:{scale:0.3}});
+    atoms.forEach((a,i)=>viewer.addLabel(`${i+1}`,{position:a,fontSize:12}));
+
+    viewer.zoomTo(); viewer.render();
+  }
+
+
+  drawZh()
 
   // -------- H2O --------
   function drawH2O() {
@@ -209,7 +285,7 @@ src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js">
     atoms.forEach((a,i)=>viewer.addLabel(`${i+1}`,{position:a,fontSize:12}));
     viewer.zoomTo(); viewer.render();
   }
-
+  drawO();
   drawH2O();
   drawCO2();
   draw5();
